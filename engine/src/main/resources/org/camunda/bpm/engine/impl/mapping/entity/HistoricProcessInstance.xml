@@ -18,6 +18,15 @@
 
 <mapper namespace="org.camunda.bpm.engine.impl.persistence.entity.HistoricProcessInstanceEntity">
 
+    <resultMap id="finishedReportResultMap" type="org.camunda.bpm.engine.impl.persistence.entity.FinishedReportResultEntity">
+      <result property="cleanableProcessInstanceCount" column="CLEANABLE_" jdbcType="BIGINT" />
+      <result property="finishedProcessInstanceCount" column="FINISHED_" jdbcType="BIGINT" />
+      <result property="processDefinitionId" column="ID_" jdbcType="VARCHAR" />
+      <result property="processDefinitionKey" column="KEY_" jdbcType="VARCHAR" />
+      <result property="processDefinitionVersion" column="VERSION_" jdbcType="VARCHAR" />
+      <result property="historyTimeToLive" column="HISTORY_TTL_" jdbcType="BIGINT" />
+    </resultMap>
+
     <!-- HISTORIC PROCESS INSTANCE INSERT -->
 
     <insert id="insertHistoricProcessInstanceEvent"
@@ -393,6 +402,77 @@
             pi.PROC_DEF_ID_ = pd.ID_
             AND not pi.END_TIME_ is NULL
             AND not pd.HISTORY_TTL_ is NULL
+    </sql>
+
+    <sql id="selectX">
+     AS CLEANABLE_
+            ,PD.ID_
+            ,PD.KEY_
+            ,PD.VERSION_
+            ,PD.HISTORY_TTL_
+            ,F.FINISHED_
+        FROM ${prefix}ACT_HI_PROCINST PI
+        LEFT JOIN ${prefix}ACT_RE_PROCDEF PD
+        ON PI.PROC_DEF_ID_ = PD.ID_
+        LEFT JOIN (
+            SELECT COUNT(PI.ID_) AS FINISHED_
+                ,PI.PROC_DEF_ID_
+            FROM ACT_HI_PROCINST PI
+            WHERE PI.END_TIME_ IS NOT NULL
+            GROUP BY PI.PROC_DEF_ID_
+            ) F ON F.PROC_DEF_ID_ = PI.PROC_DEF_ID_
+        WHERE PI.END_TIME_ IS NOT NULL
+        AND
+        PD.ID_ IS NOT NULL
+        GROUP BY PI.PROC_DEF_ID_
+    </sql>
+
+    <select id="selectTmp" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
+        SELECT SUM(<include refid="selectCase"/>) <include refid="selectX"/>
+    </select>
+
+    <select id="selectTmp_mssql" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
+        SELECT SUM(<include refid="selectCase_mssql"/>) <include refid="selectX"/>
+    </select>
+
+    <select id="selectTmp_db2" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
+        SELECT SUM(<include refid="selectCase_db2"/>) <include refid="selectX"/>
+    </select>
+
+    <select id="selectTmp_oracle" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
+        SELECT SUM(<include refid="selectCase_oracle"/>) <include refid="selectX"/>
+    </select>
+
+    <select id="selectTmp_postgres" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
+        SELECT SUM(<include refid="selectCase_postgres"/>) <include refid="selectX"/>
+    </select>
+
+    <select id="selectTmp_mysql" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
+        SELECT SUM(<include refid="selectCase_mysql"/>) <include refid="selectX"/>
+    </select>
+
+    <sql id="selectCase">
+      SELECT CASE WHEN DATEDIFF(DAY, PI.END_TIME_, #{parameter}) &gt;= PD.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+    </sql>
+
+    <sql id="selectCase_mssql">
+      SELECT CASE WHEN DATEDIFF(DAY, PI.END_TIME_, #{parameter}) &gt;= PD.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+    </sql>
+
+    <sql id="selectCase_db2">
+      SELECT CASE WHEN pi.END_TIME_ + pd.HISTORY_TTL_ DAYS &lt;= #{parameter} THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+    </sql>
+
+    <sql id="selectCase_oracle">
+      SELECT CASE WHEN pi.END_TIME_ + pd.HISTORY_TTL_ &lt;= #{parameter} THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+    </sql>
+
+    <sql id="selectCase_postgres">
+      SELECT CASE WHEN (day from #{parameter} - pi.END_TIME_) &gt;= pd.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+    </sql>
+
+    <sql id="selectCase_mysql">
+      SELECT CASE WHEN DATEDIFF(DAY, PI.END_TIME_, #{parameter}) &gt;= PD.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
     </sql>
 
     <select id="selectHistoricProcessInstanceIdsForCleanup" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultType="string">

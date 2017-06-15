@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.camunda.bpm.engine.history.FinishedReportResult;
 import org.camunda.bpm.engine.history.HistoricProcessInstance;
 import org.camunda.bpm.engine.impl.HistoricProcessInstanceQueryImpl;
 import org.camunda.bpm.engine.impl.Page;
@@ -118,6 +119,12 @@ public class HistoricProcessInstanceManager extends AbstractHistoricManager {
     ListQueryParameterObject parameterObject = new ListQueryParameterObject();
     parameterObject.setParameter(ClockUtil.getCurrentTime());
     return (Long) getDbEntityManager().selectOne("selectHistoricProcessInstanceIdsForCleanupCount", parameterObject);
+  }
+
+  public List<FinishedReportResult> findCountTmp() {
+    ListQueryParameterObject parameterObject = new ListQueryParameterObject();
+    parameterObject.setParameter(ClockUtil.getCurrentTime());
+    return (List<FinishedReportResult>) getDbEntityManager().selectList("selectTmp", parameterObject);
   }
 
   public List<String> findHistoricProcessInstanceIds(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery) {
