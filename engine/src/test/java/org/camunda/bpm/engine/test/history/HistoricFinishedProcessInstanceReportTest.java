@@ -23,6 +23,9 @@ import java.util.Map;
 import org.apache.commons.lang.time.DateUtils;
 import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
+import org.camunda.bpm.engine.RepositoryService;
+import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.history.FinishedReportResult;
 import org.camunda.bpm.engine.history.HistoricProcessInstance;
 import org.camunda.bpm.engine.impl.interceptor.Command;
@@ -55,6 +58,9 @@ public class HistoricFinishedProcessInstanceReportTest {
 
   protected ProcessEngineConfiguration processEngineConfiguration;
   protected HistoryService historyService;
+  protected TaskService taskService;
+  protected RepositoryService repositoryService;
+  protected RuntimeService runtimeService;
 
   protected static final String PROCESS_DEFINITION_KEY = "HISTORIC_TASK_INST";
   protected static final String OTHER_PROCESS_DEFINITION_KEY = "OTHER_HISTORIC_TASK_INST";
@@ -65,6 +71,9 @@ public class HistoricFinishedProcessInstanceReportTest {
   public void setUp() {
     historyService = engineRule.getHistoryService();
     processEngineConfiguration = engineRule.getProcessEngineConfiguration();
+    taskService = engineRule.getTaskService();
+    repositoryService = engineRule.getRepositoryService();
+    runtimeService = engineRule.getRuntimeService();
 
     testRule.deploy(createProcessWithUserTask(PROCESS_DEFINITION_KEY));
     testRule.deploy(createProcessWithUserTask(OTHER_PROCESS_DEFINITION_KEY));
@@ -74,14 +83,14 @@ public class HistoricFinishedProcessInstanceReportTest {
 
   @After
   public void cleanUp() {
-    List<Task> list = engineRule.getTaskService().createTaskQuery().list();
+    List<Task> list = taskService.createTaskQuery().list();
     for (Task task : list) {
-      engineRule.getTaskService().deleteTask(task.getId(), true);
+      taskService.deleteTask(task.getId(), true);
     }
 
-    List<HistoricProcessInstance> historicProcessInstances = engineRule.getHistoryService().createHistoricProcessInstanceQuery().list();
+    List<HistoricProcessInstance> historicProcessInstances = historyService.createHistoricProcessInstanceQuery().list();
     for (HistoricProcessInstance historicProcessInstance : historicProcessInstances) {
-      engineRule.getHistoryService().deleteHistoricProcessInstance(historicProcessInstance.getId());
+      historyService.deleteHistoricProcessInstance(historicProcessInstance.getId());
     }
   }
 
@@ -95,9 +104,9 @@ public class HistoricFinishedProcessInstanceReportTest {
   }
 
   protected void prepareProcessInstances(String key, int daysInThePast, Integer historyTimeToLive, int instanceCount, boolean varEnabled) {
-    List<ProcessDefinition> processDefinitions = engineRule.getRepositoryService().createProcessDefinitionQuery().processDefinitionKey(key).list();
+    List<ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery().processDefinitionKey(key).list();
     assertEquals(1, processDefinitions.size());
-    engineRule.getRepositoryService().updateProcessDefinitionHistoryTimeToLive(processDefinitions.get(0).getId(), historyTimeToLive);
+    repositoryService.updateProcessDefinitionHistoryTimeToLive(processDefinitions.get(0).getId(), historyTimeToLive);
 
     Date oldCurrentTime = ClockUtil.getCurrentTime();
     ClockUtil.setCurrentTime(DateUtils.addDays(new Date(), daysInThePast));
@@ -106,16 +115,16 @@ public class HistoricFinishedProcessInstanceReportTest {
     if (varEnabled) {
       Map<String, Object> variables = Variables.createVariables().putValue("pojo", new TestPojo("okay", 13.37));
       for (int i = 0; i < instanceCount; i++) {
-        ProcessInstance processInstance = engineRule.getRuntimeService().startProcessInstanceByKey(key, variables);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(key, variables);
         processInstanceIds.add(processInstance.getId());
       }
     } else {
       for (int i = 0; i < instanceCount; i++) {
-        ProcessInstance processInstance = engineRule.getRuntimeService().startProcessInstanceByKey(key);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(key);
         processInstanceIds.add(processInstance.getId());
       }
     }
-    engineRule.getRuntimeService().deleteProcessInstances(processInstanceIds, null, true, true);
+    runtimeService.deleteProcessInstances(processInstanceIds, null, true, true);
 
     ClockUtil.setCurrentTime(oldCurrentTime);
   }
@@ -129,8 +138,8 @@ public class HistoricFinishedProcessInstanceReportTest {
     prepareProcessInstances(ANOTHER_PROCESS_DEFINITION_KEY, -6, null, 10, true);
     prepareProcessInstances(LAST_PROCESS_DEFINITION_KEY, -6, 0, 10, true);
 
-    engineRule.getRepositoryService().deleteProcessDefinition(
-        engineRule.getRepositoryService().createProcessDefinitionQuery().processDefinitionKey(OTHER_PROCESS_DEFINITION_KEY).singleResult().getId(), false);
+    repositoryService.deleteProcessDefinition(
+        repositoryService.createProcessDefinitionQuery().processDefinitionKey(OTHER_PROCESS_DEFINITION_KEY).singleResult().getId(), false);
 
     engineRule.getProcessEngineConfiguration().getCommandExecutorTxRequired().execute(new Command<Object>() {
       @Override

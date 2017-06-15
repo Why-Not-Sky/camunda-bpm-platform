@@ -462,15 +462,15 @@
     </sql>
 
     <sql id="selectCase_mssql">
-      CASE WHEN DATEDIFF(DAY, PI.END_TIME_, #{parameter}) &gt;= PD.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+      CASE WHEN DATEDIFF(DAY, PI.END_TIME_, #{parameter}) &gt;= PD.HISTORY_TTL_ THEN 1 ELSE 0 END
     </sql>
 
     <sql id="selectCase_db2">
-      CASE WHEN pi.END_TIME_ + pd.HISTORY_TTL_ DAYS &lt;= #{parameter} THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+      CASE WHEN pi.END_TIME_ + pd.HISTORY_TTL_ DAYS &lt;= #{parameter} THEN 1 ELSE 0 END
     </sql>
 
     <sql id="selectCase_oracle">
-      CASE WHEN pi.END_TIME_ + pd.HISTORY_TTL_ &lt;= #{parameter} THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+      CASE WHEN pi.END_TIME_ + pd.HISTORY_TTL_ &lt;= #{parameter} THEN 1 ELSE 0 END
     </sql>
 
     <sql id="selectCase_postgres">
