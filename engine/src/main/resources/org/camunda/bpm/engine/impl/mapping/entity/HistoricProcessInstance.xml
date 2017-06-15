@@ -428,13 +428,7 @@
     </sql>
 
     <select id="selectTmp" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
-        SELECT SUM(<include refid="selectCase"/>) 
-        <include refid="selectX"/>,
-          PD.ID_,
-          PD.KEY_,
-          PD.VERSION_,
-          PD.HISTORY_TTL_,
-          F.FINISHED_
+        SELECT SUM(<include refid="selectCase"/>) <include refid="selectX"/>
     </select>
 
     <select id="selectTmp_mssql" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
@@ -450,7 +444,13 @@
     </select>
 
     <select id="selectTmp_postgres" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
-        SELECT SUM(<include refid="selectCase_postgres"/>) <include refid="selectX"/>
+        SELECT SUM(<include refid="selectCase_postgres"/>)
+        <include refid="selectX"/>,
+          PD.ID_,
+          PD.KEY_,
+          PD.VERSION_,
+          PD.HISTORY_TTL_,
+          F.FINISHED_
     </select>
 
     <select id="selectTmp_mysql" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
