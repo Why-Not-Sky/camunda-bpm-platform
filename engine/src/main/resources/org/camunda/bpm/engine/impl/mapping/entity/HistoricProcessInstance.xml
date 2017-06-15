@@ -428,7 +428,13 @@
     </sql>
 
     <select id="selectTmp" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
-        SELECT SUM(<include refid="selectCase"/>) <include refid="selectX"/>
+        SELECT SUM(<include refid="selectCase"/>) 
+        <include refid="selectX"/>,
+          PD.ID_,
+          PD.KEY_,
+          PD.VERSION_,
+          PD.HISTORY_TTL_,
+          F.FINISHED_
     </select>
 
     <select id="selectTmp_mssql" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
@@ -456,23 +462,23 @@
     </sql>
 
     <sql id="selectCase_mssql">
-      SELECT CASE WHEN DATEDIFF(DAY, PI.END_TIME_, #{parameter}) &gt;= PD.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+      CASE WHEN DATEDIFF(DAY, PI.END_TIME_, #{parameter}) &gt;= PD.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
     </sql>
 
     <sql id="selectCase_db2">
-      SELECT CASE WHEN pi.END_TIME_ + pd.HISTORY_TTL_ DAYS &lt;= #{parameter} THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+      CASE WHEN pi.END_TIME_ + pd.HISTORY_TTL_ DAYS &lt;= #{parameter} THEN 1 ELSE 0 END ${dbSpecificDummyTable}
     </sql>
 
     <sql id="selectCase_oracle">
-      SELECT CASE WHEN pi.END_TIME_ + pd.HISTORY_TTL_ &lt;= #{parameter} THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+      CASE WHEN pi.END_TIME_ + pd.HISTORY_TTL_ &lt;= #{parameter} THEN 1 ELSE 0 END ${dbSpecificDummyTable}
     </sql>
 
     <sql id="selectCase_postgres">
-      SELECT CASE WHEN (day from #{parameter} - pi.END_TIME_) &gt;= pd.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+      CASE WHEN EXTRACT (day from #{parameter} - pi.END_TIME_) &gt;= pd.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
     </sql>
 
     <sql id="selectCase_mysql">
-      SELECT CASE WHEN DATEDIFF(DAY, PI.END_TIME_, #{parameter}) &gt;= PD.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+      CASE WHEN DATEDIFF(#{parameter}, PI.END_TIME_) &gt;= PD.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
     </sql>
 
     <select id="selectHistoricProcessInstanceIdsForCleanup" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultType="string">
