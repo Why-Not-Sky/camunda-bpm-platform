@@ -432,15 +432,33 @@
     </select>
 
     <select id="selectTmp_mssql" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
-        SELECT SUM(<include refid="selectCase_mssql"/>) <include refid="selectX"/>
+        SELECT SUM(<include refid="selectCase_mssql"/>)
+        <include refid="selectX"/>,
+          PD.ID_,
+          PD.KEY_,
+          PD.VERSION_,
+          PD.HISTORY_TTL_,
+          F.FINISHED_
     </select>
 
     <select id="selectTmp_db2" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
-        SELECT SUM(<include refid="selectCase_db2"/>) <include refid="selectX"/>
+        SELECT SUM(<include refid="selectCase_db2"/>)
+        <include refid="selectX"/>,
+          PD.ID_,
+          PD.KEY_,
+          PD.VERSION_,
+          PD.HISTORY_TTL_,
+          F.FINISHED_
     </select>
 
     <select id="selectTmp_oracle" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
-        SELECT SUM(<include refid="selectCase_oracle"/>) <include refid="selectX"/>
+        SELECT SUM(<include refid="selectCase_oracle"/>)
+        <include refid="selectX"/>,
+          PD.ID_,
+          PD.KEY_,
+          PD.VERSION_,
+          PD.HISTORY_TTL_,
+          F.FINISHED_
     </select>
 
     <select id="selectTmp_postgres" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
