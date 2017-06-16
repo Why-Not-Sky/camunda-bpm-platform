@@ -109,7 +109,7 @@ public class HistoricFinishedProcessInstanceReportTest {
     repositoryService.updateProcessDefinitionHistoryTimeToLive(processDefinitions.get(0).getId(), historyTimeToLive);
 
     Date oldCurrentTime = ClockUtil.getCurrentTime();
-    ClockUtil.setCurrentTime(DateUtils.addDays(new Date(), daysInThePast));
+    ClockUtil.setCurrentTime(DateUtils.addDays(oldCurrentTime, daysInThePast));
 
     List<String> processInstanceIds = new ArrayList<String>();
     if (varEnabled) {
