@@ -31,8 +31,6 @@ import org.camunda.bpm.engine.history.FinishedReportResult;
 import org.camunda.bpm.engine.history.HistoricProcessInstance;
 import org.camunda.bpm.engine.history.HistoricProcessInstanceQuery;
 import org.camunda.bpm.engine.impl.AbstractQuery;
-import org.camunda.bpm.engine.impl.interceptor.Command;
-import org.camunda.bpm.engine.impl.interceptor.CommandContext;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.camunda.bpm.engine.query.PeriodUnit;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
@@ -369,21 +367,12 @@ public class HistoricProcessInstanceAuthorizationTest extends AuthorizationTest 
 
     createGrantAuthorization(PROCESS_DEFINITION, PROCESS_KEY, userId, Permissions.READ, Permissions.READ_HISTORY);
 
-    processEngineConfiguration.getCommandExecutorTxRequired().execute(new Command<Object>() {
-      @Override
-      public Object execute(CommandContext commandContext) {
+    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
-        // when
-        List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count(commandContext);
-
-        // then
-        assertEquals(1, reportResults.size());
-        assertEquals(10, reportResults.get(0).getCleanableProcessInstanceCount().longValue());
-        assertEquals(10, reportResults.get(0).getFinishedProcessInstanceCount().longValue());
-
-        return null;
-      }
-    });
+    // then
+    assertEquals(1, reportResults.size());
+    assertEquals(10, reportResults.get(0).getCleanableProcessInstanceCount().longValue());
+    assertEquals(10, reportResults.get(0).getFinishedProcessInstanceCount().longValue());
   }
 
   public void testHistoryCleanupReportWithReadPermissionOnly() {
@@ -392,19 +381,11 @@ public class HistoricProcessInstanceAuthorizationTest extends AuthorizationTest 
 
     createGrantAuthorization(PROCESS_DEFINITION, PROCESS_KEY, userId, Permissions.READ);
 
-    processEngineConfiguration.getCommandExecutorTxRequired().execute(new Command<Object>() {
-      @Override
-      public Object execute(CommandContext commandContext) {
+    // when
+    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
-        // when
-        List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count(commandContext);
-
-        // then
-        assertEquals(0, reportResults.size());
-
-        return null;
-      }
-    });
+    // then
+    assertEquals(0, reportResults.size());
   }
 
   public void testHistoryCleanupReportWithReadHistoryPermissionOnly() {
@@ -413,38 +394,22 @@ public class HistoricProcessInstanceAuthorizationTest extends AuthorizationTest 
 
     createGrantAuthorization(PROCESS_DEFINITION, PROCESS_KEY, userId, Permissions.READ_HISTORY);
 
-    processEngineConfiguration.getCommandExecutorTxRequired().execute(new Command<Object>() {
-      @Override
-      public Object execute(CommandContext commandContext) {
+    // when
+    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
-        // when
-        List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count(commandContext);
-
-        // then
-        assertEquals(0, reportResults.size());
-
-        return null;
-      }
-    });
+    // then
+    assertEquals(0, reportResults.size());
   }
 
   public void testHistoryCleanupReportWithoutPermissions() {
     // given
     prepareProcessInstances(PROCESS_KEY, -6, 5, 10);
 
-    processEngineConfiguration.getCommandExecutorTxRequired().execute(new Command<Object>() {
-      @Override
-      public Object execute(CommandContext commandContext) {
+    // when
+    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
-        // when
-        List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count(commandContext);
-
-        // then
-        assertEquals(0, reportResults.size());
-
-        return null;
-      }
-    });
+    // then
+    assertEquals(0, reportResults.size());
   }
 
   // helper ////////////////////////////////////////////////////////

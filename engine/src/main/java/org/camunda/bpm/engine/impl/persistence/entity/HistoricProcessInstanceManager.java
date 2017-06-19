@@ -128,6 +128,7 @@ public class HistoricProcessInstanceManager extends AbstractHistoricManager {
     ListQueryParameterObject parameterObject = new ListQueryParameterObject();
     parameterObject.setParameter(ClockUtil.getCurrentTime());
     getAuthorizationManager().configureQuery(parameterObject, Resources.PROCESS_DEFINITION, "PD.KEY_", Permissions.READ, Permissions.READ_HISTORY);
+    getTenantManager().configureQuery(parameterObject);
     return (List<FinishedReportResult>) getDbEntityManager().selectList("selectTmp", parameterObject);
   }
 

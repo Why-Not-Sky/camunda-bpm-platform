@@ -15,9 +15,7 @@ package org.camunda.bpm.engine.history;
 
 import java.util.List;
 
-import org.camunda.bpm.engine.impl.interceptor.CommandContext;
-
 public interface HistoricFinishedProcessInstanceReport {
 
-  List<FinishedReportResult> count(CommandContext commandContext);
+  List<FinishedReportResult> count();
 }
