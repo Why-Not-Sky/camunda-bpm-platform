@@ -17,8 +17,6 @@ import java.util.List;
 
 import org.camunda.bpm.engine.history.FinishedReportResult;
 import org.camunda.bpm.engine.history.HistoricFinishedProcessInstanceReport;
-import org.camunda.bpm.engine.impl.context.Context;
-import org.camunda.bpm.engine.impl.interceptor.Command;
 import org.camunda.bpm.engine.impl.interceptor.CommandContext;
 import org.camunda.bpm.engine.impl.interceptor.CommandExecutor;
 
@@ -28,26 +26,6 @@ public class HistoricFinishedProcessInstanceReportImpl implements HistoricFinish
 
   public HistoricFinishedProcessInstanceReportImpl(CommandExecutor commandExecutor) {
     this.commandExecutor = commandExecutor;
-  }
-
-  public Long countCleanableInstances() {//XXX
-    CommandContext commandContext = Context.getCommandContext();
-
-    if(commandContext == null) {
-      return commandExecutor.execute(new Command<Long>() {
-        @Override
-        public Long execute(CommandContext commandContext){
-          return selectCleanableFinishedProcessInstanceCount(commandContext);
-        }
-      });
-    }
-    else {
-      return selectCleanableFinishedProcessInstanceCount(commandContext);
-    }
-  }
-
-  private Long selectCleanableFinishedProcessInstanceCount(CommandContext commandContext) {
-    return commandContext.getHistoricProcessInstanceManager().findHistoricProcessInstanceIdsForCleanupCount();
   }
 
   @Override

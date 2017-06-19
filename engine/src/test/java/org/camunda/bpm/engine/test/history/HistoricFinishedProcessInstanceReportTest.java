@@ -14,6 +14,7 @@
 package org.camunda.bpm.engine.test.history;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,10 +63,10 @@ public class HistoricFinishedProcessInstanceReportTest {
   protected RepositoryService repositoryService;
   protected RuntimeService runtimeService;
 
-  protected static final String PROCESS_DEFINITION_KEY = "HISTORIC_TASK_INST";
-  protected static final String OTHER_PROCESS_DEFINITION_KEY = "OTHER_HISTORIC_TASK_INST";
-  protected static final String ANOTHER_PROCESS_DEFINITION_KEY = "ANOTHER_HISTORIC_TASK_INST";
-  protected static final String LAST_PROCESS_DEFINITION_KEY = "LAST_HISTORIC_TASK_INST";
+  protected static final String PROCESS_DEFINITION_KEY = "HISTORIC_INST";
+  protected static final String SECOND_PROCESS_DEFINITION_KEY = "SECOND_HISTORIC_INST";
+  protected static final String THIRD_PROCESS_DEFINITION_KEY = "THIRD_HISTORIC_INST";
+  protected static final String FOURTH_PROCESS_DEFINITION_KEY = "FOURTH_HISTORIC_INST";
 
   @Before
   public void setUp() {
@@ -76,9 +77,6 @@ public class HistoricFinishedProcessInstanceReportTest {
     runtimeService = engineRule.getRuntimeService();
 
     testRule.deploy(createProcessWithUserTask(PROCESS_DEFINITION_KEY));
-    testRule.deploy(createProcessWithUserTask(OTHER_PROCESS_DEFINITION_KEY));
-    testRule.deploy(createProcessWithUserTask(ANOTHER_PROCESS_DEFINITION_KEY));
-    testRule.deploy(createProcessWithUserTask(LAST_PROCESS_DEFINITION_KEY));
   }
 
   @After
@@ -131,15 +129,18 @@ public class HistoricFinishedProcessInstanceReportTest {
 
   @Test
   public void testComplex() {
+    testRule.deploy(createProcessWithUserTask(SECOND_PROCESS_DEFINITION_KEY));
+    testRule.deploy(createProcessWithUserTask(THIRD_PROCESS_DEFINITION_KEY));
+    testRule.deploy(createProcessWithUserTask(FOURTH_PROCESS_DEFINITION_KEY));
     // given
     prepareProcessInstances(PROCESS_DEFINITION_KEY, 0, 5, 10, true);
     prepareProcessInstances(PROCESS_DEFINITION_KEY, -6, 5, 10, true);
-    prepareProcessInstances(OTHER_PROCESS_DEFINITION_KEY, -6, 5, 10, false);
-    prepareProcessInstances(ANOTHER_PROCESS_DEFINITION_KEY, -6, null, 10, true);
-    prepareProcessInstances(LAST_PROCESS_DEFINITION_KEY, -6, 0, 10, true);
+    prepareProcessInstances(SECOND_PROCESS_DEFINITION_KEY, -6, 5, 10, false);
+    prepareProcessInstances(THIRD_PROCESS_DEFINITION_KEY, -6, null, 10, true);
+    prepareProcessInstances(FOURTH_PROCESS_DEFINITION_KEY, -6, 0, 10, true);
 
     repositoryService.deleteProcessDefinition(
-        repositoryService.createProcessDefinitionQuery().processDefinitionKey(OTHER_PROCESS_DEFINITION_KEY).singleResult().getId(), false);
+        repositoryService.createProcessDefinitionQuery().processDefinitionKey(SECOND_PROCESS_DEFINITION_KEY).singleResult().getId(), false);
 
     engineRule.getProcessEngineConfiguration().getCommandExecutorTxRequired().execute(new Command<Object>() {
       @Override
@@ -152,9 +153,9 @@ public class HistoricFinishedProcessInstanceReportTest {
         for (FinishedReportResult result : reportResults) {
           if (result.getProcessDefinitionKey().equals(PROCESS_DEFINITION_KEY)) {
             checkResultNumbers(result, 10, 20);
-          } else if (result.getProcessDefinitionKey().equals(ANOTHER_PROCESS_DEFINITION_KEY)) {
+          } else if (result.getProcessDefinitionKey().equals(THIRD_PROCESS_DEFINITION_KEY)) {
             checkResultNumbers(result, 0, 10);
-          } else if (result.getProcessDefinitionKey().equals(LAST_PROCESS_DEFINITION_KEY)) {
+          } else if (result.getProcessDefinitionKey().equals(FOURTH_PROCESS_DEFINITION_KEY)) {
             checkResultNumbers(result, 10, 10);
           }
         }
@@ -182,8 +183,17 @@ public class HistoricFinishedProcessInstanceReportTest {
 
         // then
         assertEquals(1, reportResults.size());
-        assertEquals(10, reportResults.get(0).getCleanableProcessInstanceCount().longValue());
-        assertEquals(10, reportResults.get(0).getFinishedProcessInstanceCount().longValue());
+        boolean entityFound = false;
+
+        for (FinishedReportResult result : reportResults) {
+          if (result.getProcessDefinitionKey().equals(PROCESS_DEFINITION_KEY)) {
+            checkResultNumbers(result, 10, 10);
+            entityFound = true;
+            break;
+          }
+        }
+
+        assertTrue(entityFound);
 
         return null;
       }
@@ -204,8 +214,17 @@ public class HistoricFinishedProcessInstanceReportTest {
 
         // then
         assertEquals(1, reportResults.size());
-        assertEquals(5, reportResults.get(0).getCleanableProcessInstanceCount().longValue());
-        assertEquals(10, reportResults.get(0).getFinishedProcessInstanceCount().longValue());
+        boolean entityFound = false;
+
+        for (FinishedReportResult result : reportResults) {
+          if (result.getProcessDefinitionKey().equals(PROCESS_DEFINITION_KEY)) {
+            checkResultNumbers(result, 5, 10);
+            entityFound = true;
+            break;
+          }
+        }
+
+        assertTrue(entityFound);
 
         return null;
       }
@@ -226,8 +245,17 @@ public class HistoricFinishedProcessInstanceReportTest {
 
         // then
         assertEquals(1, reportResults.size());
-        assertEquals(10, reportResults.get(0).getCleanableProcessInstanceCount().longValue());
-        assertEquals(10, reportResults.get(0).getFinishedProcessInstanceCount().longValue());
+        boolean entityFound = false;
+
+        for (FinishedReportResult result : reportResults) {
+          if (result.getProcessDefinitionKey().equals(PROCESS_DEFINITION_KEY)) {
+            checkResultNumbers(result, 10, 10);
+            entityFound = true;
+            break;
+          }
+        }
+
+        assertTrue(entityFound);
 
         return null;
       }
@@ -248,8 +276,17 @@ public class HistoricFinishedProcessInstanceReportTest {
 
         // then
         assertEquals(1, reportResults.size());
-        assertEquals(0, reportResults.get(0).getCleanableProcessInstanceCount().longValue());
-        assertEquals(10, reportResults.get(0).getFinishedProcessInstanceCount().longValue());
+        boolean entityFound = false;
+
+        for (FinishedReportResult result : reportResults) {
+          if (result.getProcessDefinitionKey().equals(PROCESS_DEFINITION_KEY)) {
+            checkResultNumbers(result, 0, 10);
+            entityFound = true;
+            break;
+          }
+        }
+
+        assertTrue(entityFound);
 
         return null;
       }
