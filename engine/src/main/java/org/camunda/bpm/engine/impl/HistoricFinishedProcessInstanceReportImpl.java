@@ -20,7 +20,6 @@ import org.camunda.bpm.engine.history.HistoricFinishedProcessInstanceReport;
 import org.camunda.bpm.engine.impl.interceptor.Command;
 import org.camunda.bpm.engine.impl.interceptor.CommandContext;
 import org.camunda.bpm.engine.impl.interceptor.CommandExecutor;
-import org.camunda.bpm.engine.task.TaskCountByCandidateGroupResult;
 
 public class HistoricFinishedProcessInstanceReportImpl implements HistoricFinishedProcessInstanceReport {
 
