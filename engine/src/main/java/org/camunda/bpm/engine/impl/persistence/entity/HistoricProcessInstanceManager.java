@@ -18,6 +18,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+
+import org.camunda.bpm.engine.authorization.Permissions;
+import org.camunda.bpm.engine.authorization.Resources;
 import org.camunda.bpm.engine.history.FinishedReportResult;
 import org.camunda.bpm.engine.history.HistoricProcessInstance;
 import org.camunda.bpm.engine.impl.HistoricProcessInstanceQueryImpl;
@@ -124,6 +127,7 @@ public class HistoricProcessInstanceManager extends AbstractHistoricManager {
   public List<FinishedReportResult> findCountTmp() {
     ListQueryParameterObject parameterObject = new ListQueryParameterObject();
     parameterObject.setParameter(ClockUtil.getCurrentTime());
+    getAuthorizationManager().configureQuery(parameterObject, Resources.PROCESS_DEFINITION, "PD.KEY_", Permissions.READ, Permissions.READ_HISTORY);
     return (List<FinishedReportResult>) getDbEntityManager().selectList("selectTmp", parameterObject);
   }
 
