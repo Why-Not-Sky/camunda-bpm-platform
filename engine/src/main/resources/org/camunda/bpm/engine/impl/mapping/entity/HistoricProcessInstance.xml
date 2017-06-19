@@ -512,7 +512,7 @@
   </select>
 
   <!-- Select History Cleanup Report Entities -->
-  <select id="selectHistoryCleanupReportEntities" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedselectHistoryCleanupReportEntitiesResultMap">
+  <select id="selectHistoryCleanupReportEntities" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
         SELECT SUM(<include refid="selectCaseForCleanableProcessInstances" />)
         <include refid="selectHistoryCleanupReportEntitiesSql" />
     </select>
