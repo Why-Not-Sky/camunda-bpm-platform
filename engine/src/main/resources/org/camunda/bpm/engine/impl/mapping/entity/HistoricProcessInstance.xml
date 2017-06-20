@@ -570,7 +570,7 @@
     </select>
 
     <sql id="selectCaseForCleanableProcessInstances">
-      SELECT CAselectCaseForCleanableProcessInstances.END_TIME_ is not null and DATEDIFF(DAY, PI.END_TIME_, #{parameter}) &gt;= RES.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
+      SELECT CASE WHEN PI.END_TIME_ is not null and DATEDIFF(DAY, PI.END_TIME_, #{parameter}) &gt;= RES.HISTORY_TTL_ THEN 1 ELSE 0 END ${dbSpecificDummyTable}
     </sql>
 
     <sql id="selectCaseForCleanableProcessInstances_mssql">
