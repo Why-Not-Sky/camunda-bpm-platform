@@ -124,12 +124,12 @@ public class HistoricProcessInstanceManager extends AbstractHistoricManager {
     return (Long) getDbEntityManager().selectOne("selectHistoricProcessInstanceIdsForCleanupCount", parameterObject);
   }
 
-  public List<FinishedReportResult> findCountTmp() {
+  public List<FinishedReportResult> findFinishedProcessInstancesReport() {
     ListQueryParameterObject parameterObject = new ListQueryParameterObject();
     parameterObject.setParameter(ClockUtil.getCurrentTime());
     getAuthorizationManager().configureQuery(parameterObject, Resources.PROCESS_DEFINITION, "PD.KEY_", Permissions.READ, Permissions.READ_HISTORY);
     getTenantManager().configureQuery(parameterObject);
-    return (List<FinishedReportResult>) getDbEntityManager().selectList("selectTmp", parameterObject);
+    return (List<FinishedReportResult>) getDbEntityManager().selectList("selectHistoryCleanupReportEntities", parameterObject);
   }
 
   public List<String> findHistoricProcessInstanceIds(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery) {

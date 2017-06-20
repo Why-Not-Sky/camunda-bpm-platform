@@ -34,7 +34,7 @@ public class HistoricFinishedProcessInstanceReportImpl implements HistoricFinish
     return commandExecutor.execute(new Command<List<FinishedReportResult>>() {
       @Override
       public List<FinishedReportResult> execute(CommandContext commandContext) {
-        return commandContext.getHistoricProcessInstanceManager().findCountTmp();
+        return commandContext.getHistoricProcessInstanceManager().findFinishedProcessInstancesReport();
       }
     });
   }
