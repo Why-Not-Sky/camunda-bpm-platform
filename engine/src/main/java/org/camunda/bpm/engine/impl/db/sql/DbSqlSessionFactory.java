@@ -139,7 +139,7 @@ public class DbSqlSessionFactory implements SessionFactory {
       addDatabaseSpecificStatement(mysqlLikeDatabase, "selectHistoricProcessInstanceIdsForCleanupCount", "selectHistoricProcessInstanceIdsForCleanupCount_mysql");
       addDatabaseSpecificStatement(mysqlLikeDatabase, "selectHistoricDecisionInstanceIdsForCleanup", "selectHistoricDecisionInstanceIdsForCleanup_mysql");
       addDatabaseSpecificStatement(mysqlLikeDatabase, "selectHistoricCaseInstanceIdsForCleanup", "selectHistoricCaseInstanceIdsForCleanup_mysql");
-      addDatabaseSpecificStatement(mysqlLikeDatabase, "selectTmp", "selectTmp_mysql");
+      addDatabaseSpecificStatement(mysqlLikeDatabase, "selectFinishedProcessInstancesReportEntities", "selectFinishedProcessInstancesReportEntities_mysql");
 
       constants = new HashMap<String, String>();
       constants.put("constant.event", "'event'");
@@ -199,7 +199,7 @@ public class DbSqlSessionFactory implements SessionFactory {
     addDatabaseSpecificStatement(POSTGRES, "selectHistoricProcessInstanceIdsForCleanupCount", "selectHistoricProcessInstanceIdsForCleanupCount_postgres");
     addDatabaseSpecificStatement(POSTGRES, "selectHistoricDecisionInstanceIdsForCleanup", "selectHistoricDecisionInstanceIdsForCleanup_postgres");
     addDatabaseSpecificStatement(POSTGRES, "selectHistoricCaseInstanceIdsForCleanup", "selectHistoricCaseInstanceIdsForCleanup_postgres");
-    addDatabaseSpecificStatement(POSTGRES, "selectTmp", "selectTmp_postgres");
+    addDatabaseSpecificStatement(POSTGRES, "selectFinishedProcessInstancesReportEntities", "selectFinishedProcessInstancesReportEntities_postgres");
 
     constants = new HashMap<String, String>();
     constants.put("constant.event", "'event'");
@@ -240,7 +240,7 @@ public class DbSqlSessionFactory implements SessionFactory {
     addDatabaseSpecificStatement(ORACLE, "selectHistoricProcessInstanceIdsForCleanupCount", "selectHistoricProcessInstanceIdsForCleanupCount_oracle");
     addDatabaseSpecificStatement(ORACLE, "selectHistoricDecisionInstanceIdsForCleanup", "selectHistoricDecisionInstanceIdsForCleanup_oracle");
     addDatabaseSpecificStatement(ORACLE, "selectHistoricCaseInstanceIdsForCleanup", "selectHistoricCaseInstanceIdsForCleanup_oracle");
-    addDatabaseSpecificStatement(ORACLE, "selectTmp", "selectTmp_oracle");
+    addDatabaseSpecificStatement(ORACLE, "selectFinishedProcessInstancesReportEntities", "selectFinishedProcessInstancesReportEntities_oracle");
 
     constants = new HashMap<String, String>();
     constants.put("constant.event", "cast('event' as nvarchar2(255))");
@@ -288,7 +288,7 @@ public class DbSqlSessionFactory implements SessionFactory {
     addDatabaseSpecificStatement(DB2, "selectHistoricProcessInstanceIdsForCleanupCount", "selectHistoricProcessInstanceIdsForCleanupCount_db2");
     addDatabaseSpecificStatement(DB2, "selectHistoricDecisionInstanceIdsForCleanup", "selectHistoricDecisionInstanceIdsForCleanup_db2");
     addDatabaseSpecificStatement(DB2, "selectHistoricCaseInstanceIdsForCleanup", "selectHistoricCaseInstanceIdsForCleanup_db2");
-    addDatabaseSpecificStatement(DB2, "selectTmp", "selectTmp_db2");
+    addDatabaseSpecificStatement(DB2, "selectFinishedProcessInstancesReportEntities", "selectFinishedProcessInstancesReportEntities_db2");
 
     constants = new HashMap<String, String>();
     constants.put("constant.event", "'event'");
@@ -338,7 +338,7 @@ public class DbSqlSessionFactory implements SessionFactory {
     addDatabaseSpecificStatement(MSSQL, "selectHistoricProcessInstanceIdsForCleanupCount", "selectHistoricProcessInstanceIdsForCleanupCount_mssql");
     addDatabaseSpecificStatement(MSSQL, "selectHistoricDecisionInstanceIdsForCleanup", "selectHistoricDecisionInstanceIdsForCleanup_mssql");
     addDatabaseSpecificStatement(MSSQL, "selectHistoricCaseInstanceIdsForCleanup", "selectHistoricCaseInstanceIdsForCleanup_mssql");
-    addDatabaseSpecificStatement(MSSQL, "selectTmp", "selectTmp_mssql");
+    addDatabaseSpecificStatement(MSSQL, "selectFinishedProcessInstancesReportEntities", "selectFinishedProcessInstancesReportEntities_mssql");
 
     constants = new HashMap<String, String>();
     constants.put("constant.event", "'event'");

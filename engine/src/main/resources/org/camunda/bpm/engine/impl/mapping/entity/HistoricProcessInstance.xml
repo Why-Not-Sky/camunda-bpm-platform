@@ -512,12 +512,12 @@
   </select>
 
   <!-- Select History Cleanup Report Entities -->
-  <select id="selectHistoryCleanupReportEntities" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
+  <select id="selectFinishedProcessInstancesReportEntities" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
         SELECT SUM(<include refid="selectCaseForCleanableProcessInstances" />)
-        <include refid="selectHistoryCleanupReportEntitiesSql" />
+        <include refid="selectFinishedProcessInstancesReportEntitiesSql" />
     </select>
 
-    <sql id="selectHistoryCleanupReportEntitiesSql">
+    <sql id="selectFinishedProcessInstancesReportEntitiesSql">
      AS CLEANABLE_
             ,RES.ID_
             ,RES.KEY_
@@ -549,24 +549,24 @@
           F.FINISHED_
     </sql>
 
-    <select id="selectHistoryCleanupReportEntities_mssql" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
-        SELECT SUM(<include refid="selectCaseForCleanableProcessInstances_mssql" />) <include refid="selectHistoryCleanupReportEntitiesSql" />
+    <select id="selectFinishedProcessInstancesReportEntities_mssql" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
+        SELECT SUM(<include refid="selectCaseForCleanableProcessInstances_mssql" />) <include refid="selectFinishedProcessInstancesReportEntitiesSql" />
     </select>
 
-    <select id="selectHistoryCleanupReportEntities_db2" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
-        SELECT SUM(<include refid="selectCaseForCleanableProcessInstances_db2" />) <include refid="selectHistoryCleanupReportEntitiesSql" />
+    <select id="selectFinishedProcessInstancesReportEntities_db2" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
+        SELECT SUM(<include refid="selectCaseForCleanableProcessInstances_db2" />) <include refid="selectFinishedProcessInstancesReportEntitiesSql" />
     </select>
 
-    <select id="selectHistoryCleanupReportEntities_oracle" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
-        SELECT SUM(<include refid="selectCaseForCleanableProcessInstances_oracle" />) <include refid="selectHistoryCleanupReportEntitiesSql" />
+    <select id="selectFinishedProcessInstancesReportEntities_oracle" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
+        SELECT SUM(<include refid="selectCaseForCleanableProcessInstances_oracle" />) <include refid="selectFinishedProcessInstancesReportEntitiesSql" />
     </select>
 
-    <select id="selectHistoryCleanupReportEntities_postgres" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
-        SELECT SUM(<include refid="selectCaseForCleanableProcessInstances_postgres" />) <include refid="selectHistoryCleanupReportEntitiesSql" />
+    <select id="selectFinishedProcessInstancesReportEntities_postgres" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
+        SELECT SUM(<include refid="selectCaseForCleanableProcessInstances_postgres" />) <include refid="selectFinishedProcessInstancesReportEntitiesSql" />
     </select>
 
-    <select id="selectHistoryCleanupReportEntities_mysql" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
-        SELECT SUM(<include refid="selectCaseForCleanableProcessInstances_mysql" />) <include refid="selectHistoryCleanupReportEntitiesSql" />
+    <select id="selectFinishedProcessInstancesReportEntities_mysql" parameterType="org.camunda.bpm.engine.impl.db.ListQueryParameterObject" resultMap="finishedReportResultMap">
+        SELECT SUM(<include refid="selectCaseForCleanableProcessInstances_mysql" />) <include refid="selectFinishedProcessInstancesReportEntitiesSql" />
     </select>
 
     <sql id="selectCaseForCleanableProcessInstances">
