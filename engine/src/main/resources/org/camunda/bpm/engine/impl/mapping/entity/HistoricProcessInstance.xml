@@ -18,7 +18,7 @@
 
 <mapper namespace="org.camunda.bpm.engine.impl.persistence.entity.HistoricProcessInstanceEntity">
 
-    <resultMap id="finishedReportResultMap" type="org.camunda.bpm.engine.impl.persistence.entity.FinishedReportResultEntity">
+    <resultMap id="finishedReportResultMap" type="org.camunda.bpm.engine.impl.persistence.entity.HistoricFinishedProcessInstanceReportResultEntity">
       <result property="cleanableProcessInstanceCount" column="CLEANABLE_" jdbcType="BIGINT" />
       <result property="finishedProcessInstanceCount" column="FINISHED_" jdbcType="BIGINT" />
       <result property="processDefinitionId" column="ID_" jdbcType="VARCHAR" />
@@ -521,9 +521,10 @@
      AS CLEANABLE_
             ,RES.ID_
             ,RES.KEY_
+            ,RES.NAME_
             ,RES.VERSION_
             ,RES.HISTORY_TTL_
-            ,F.FINISHED_
+            ,(SELECT CASE WHEN F.FINISHED_ IS NOT NULL THEN F.FINISHED_ ELSE 0 END ) AS FINISHED_
         FROM ${prefix}ACT_RE_PROCDEF RES
         LEFT JOIN ${prefix}ACT_HI_PROCINST PI
         ON PI.PROC_DEF_ID_ = RES.ID_
@@ -544,6 +545,7 @@
         </where>
         GROUP BY RES.ID_,
           RES.KEY_,
+          RES.NAME_,
           RES.VERSION_,
           RES.HISTORY_TTL_,
           F.FINISHED_

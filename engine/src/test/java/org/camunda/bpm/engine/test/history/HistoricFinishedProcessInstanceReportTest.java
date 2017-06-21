@@ -26,7 +26,7 @@ import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
-import org.camunda.bpm.engine.history.FinishedReportResult;
+import org.camunda.bpm.engine.history.HistoricFinishedProcessInstanceReportResult;
 import org.camunda.bpm.engine.history.HistoricProcessInstance;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
@@ -130,11 +130,11 @@ public class HistoricFinishedProcessInstanceReportTest {
         repositoryService.createProcessDefinitionQuery().processDefinitionKey(SECOND_PROCESS_DEFINITION_KEY).singleResult().getId(), false);
 
         // when
-        List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
+        List<HistoricFinishedProcessInstanceReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
         // then
         assertEquals(3, reportResults.size());
-        for (FinishedReportResult result : reportResults) {
+        for (HistoricFinishedProcessInstanceReportResult result : reportResults) {
           if (result.getProcessDefinitionKey().equals(PROCESS_DEFINITION_KEY)) {
             checkResultNumbers(result, 10, 20);
           } else if (result.getProcessDefinitionKey().equals(THIRD_PROCESS_DEFINITION_KEY)) {
@@ -146,7 +146,7 @@ public class HistoricFinishedProcessInstanceReportTest {
 
   }
 
-  private void checkResultNumbers(FinishedReportResult result, int expectedCleanable, int expectedFinished) {
+  private void checkResultNumbers(HistoricFinishedProcessInstanceReportResult result, int expectedCleanable, int expectedFinished) {
     assertEquals(expectedCleanable, result.getCleanableProcessInstanceCount().longValue());
     assertEquals(expectedFinished, result.getFinishedProcessInstanceCount().longValue());
   }
@@ -157,13 +157,13 @@ public class HistoricFinishedProcessInstanceReportTest {
     prepareProcessInstances(PROCESS_DEFINITION_KEY, -6, 5, 10);
 
     // when
-    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
+    List<HistoricFinishedProcessInstanceReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
     // then
     assertEquals(1, reportResults.size());
     boolean entityFound = false;
 
-    for (FinishedReportResult result : reportResults) {
+    for (HistoricFinishedProcessInstanceReportResult result : reportResults) {
       if (result.getProcessDefinitionKey().equals(PROCESS_DEFINITION_KEY)) {
         checkResultNumbers(result, 10, 10);
         entityFound = true;
@@ -181,13 +181,13 @@ public class HistoricFinishedProcessInstanceReportTest {
     prepareProcessInstances(PROCESS_DEFINITION_KEY, 0, 5, 5);
 
     // when
-    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
+    List<HistoricFinishedProcessInstanceReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
     // then
     assertEquals(1, reportResults.size());
     boolean entityFound = false;
 
-    for (FinishedReportResult result : reportResults) {
+    for (HistoricFinishedProcessInstanceReportResult result : reportResults) {
       if (result.getProcessDefinitionKey().equals(PROCESS_DEFINITION_KEY)) {
         checkResultNumbers(result, 5, 10);
         entityFound = true;
@@ -205,13 +205,13 @@ public class HistoricFinishedProcessInstanceReportTest {
     prepareProcessInstances(PROCESS_DEFINITION_KEY, 0, 0, 5);
 
     // when
-    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
+    List<HistoricFinishedProcessInstanceReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
     // then
     assertEquals(1, reportResults.size());
     boolean entityFound = false;
 
-    for (FinishedReportResult result : reportResults) {
+    for (HistoricFinishedProcessInstanceReportResult result : reportResults) {
       if (result.getProcessDefinitionKey().equals(PROCESS_DEFINITION_KEY)) {
         checkResultNumbers(result, 10, 10);
         entityFound = true;
@@ -229,13 +229,13 @@ public class HistoricFinishedProcessInstanceReportTest {
     prepareProcessInstances(PROCESS_DEFINITION_KEY, 0, null, 5);
 
     // when
-    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
+    List<HistoricFinishedProcessInstanceReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
     // then
     assertEquals(1, reportResults.size());
     boolean entityFound = false;
 
-    for (FinishedReportResult result : reportResults) {
+    for (HistoricFinishedProcessInstanceReportResult result : reportResults) {
       if (result.getProcessDefinitionKey().equals(PROCESS_DEFINITION_KEY)) {
         checkResultNumbers(result, 0, 10);
         entityFound = true;

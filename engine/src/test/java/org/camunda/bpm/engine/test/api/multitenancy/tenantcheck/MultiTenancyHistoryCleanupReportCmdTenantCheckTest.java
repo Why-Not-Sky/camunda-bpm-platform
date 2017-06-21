@@ -26,9 +26,7 @@ import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.history.FinishedReportResult;
-import org.camunda.bpm.engine.impl.interceptor.Command;
-import org.camunda.bpm.engine.impl.interceptor.CommandContext;
+import org.camunda.bpm.engine.history.HistoricFinishedProcessInstanceReportResult;
 import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
@@ -92,7 +90,7 @@ public class MultiTenancyHistoryCleanupReportCmdTenantCheckTest {
     identityService.setAuthentication("user", null, null);
 
     // when
-    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
+    List<HistoricFinishedProcessInstanceReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
     // then
     assertEquals(0, reportResults.size());
@@ -108,7 +106,7 @@ public class MultiTenancyHistoryCleanupReportCmdTenantCheckTest {
     identityService.setAuthentication("user", null, Arrays.asList(TENANT_ONE));
 
     // when
-    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
+    List<HistoricFinishedProcessInstanceReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
     // then
     assertEquals(1, reportResults.size());
@@ -125,7 +123,7 @@ public class MultiTenancyHistoryCleanupReportCmdTenantCheckTest {
     processEngineConfiguration.setTenantCheckEnabled(false);
 
     // when
-    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
+    List<HistoricFinishedProcessInstanceReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
     // then
     assertEquals(1, reportResults.size());

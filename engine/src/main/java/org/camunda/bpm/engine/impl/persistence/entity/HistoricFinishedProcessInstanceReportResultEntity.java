@@ -14,13 +14,14 @@
 
 package org.camunda.bpm.engine.impl.persistence.entity;
 
-import org.camunda.bpm.engine.history.FinishedReportResult;
+import org.camunda.bpm.engine.history.HistoricFinishedProcessInstanceReportResult;
 
-public class FinishedReportResultEntity implements FinishedReportResult {
+public class HistoricFinishedProcessInstanceReportResultEntity implements HistoricFinishedProcessInstanceReportResult {
 
   protected String processDefinitionId;
   protected String processDefinitionKey;
-  protected String processDefinitionVersion;
+  protected String processDefinitionName;
+  protected int processDefinitionVersion;
   protected String historyTimeToLive;
   protected Long finishedProcessInstanceCount;
   protected Long cleanableProcessInstanceCount;
@@ -41,11 +42,19 @@ public class FinishedReportResultEntity implements FinishedReportResult {
     this.processDefinitionKey = processDefinitionKey;
   }
 
-  public String getProcessDefinitionVersion() {
+  public String getProcessDefinitionName() {
+    return processDefinitionName;
+  }
+
+  public void setProcessDefinitionName(String processDefinitionName) {
+    this.processDefinitionName = processDefinitionName;
+  }
+
+  public int getProcessDefinitionVersion() {
     return processDefinitionVersion;
   }
 
-  public void setProcessDefinitionVersion(String processDefinitionVersion) {
+  public void setProcessDefinitionVersion(int processDefinitionVersion) {
     this.processDefinitionVersion = processDefinitionVersion;
   }
 
@@ -76,7 +85,8 @@ public class FinishedReportResultEntity implements FinishedReportResult {
   public String toString() {
     return this.getClass().getSimpleName()
         + "[processDefinitionId = " + processDefinitionId
-        + ", processDefinitionName = " + processDefinitionKey
+        + ", processDefinitionKey = " + processDefinitionKey
+        + ", processDefinitionName = " + processDefinitionName
         + ", processDefinitionVersion = " + processDefinitionVersion
         + ", historyTimeToLive = " + historyTimeToLive
         + ", finishedProcessInstanceCount = " + finishedProcessInstanceCount

@@ -27,7 +27,7 @@ import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.camunda.bpm.engine.authorization.MissingAuthorization;
 import org.camunda.bpm.engine.authorization.Permissions;
 import org.camunda.bpm.engine.history.DurationReportResult;
-import org.camunda.bpm.engine.history.FinishedReportResult;
+import org.camunda.bpm.engine.history.HistoricFinishedProcessInstanceReportResult;
 import org.camunda.bpm.engine.history.HistoricProcessInstance;
 import org.camunda.bpm.engine.history.HistoricProcessInstanceQuery;
 import org.camunda.bpm.engine.impl.AbstractQuery;
@@ -367,7 +367,7 @@ public class HistoricProcessInstanceAuthorizationTest extends AuthorizationTest 
 
     createGrantAuthorization(PROCESS_DEFINITION, PROCESS_KEY, userId, Permissions.READ, Permissions.READ_HISTORY);
 
-    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
+    List<HistoricFinishedProcessInstanceReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
     // then
     assertEquals(1, reportResults.size());
@@ -382,7 +382,7 @@ public class HistoricProcessInstanceAuthorizationTest extends AuthorizationTest 
     createGrantAuthorization(PROCESS_DEFINITION, PROCESS_KEY, userId, Permissions.READ);
 
     // when
-    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
+    List<HistoricFinishedProcessInstanceReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
     // then
     assertEquals(0, reportResults.size());
@@ -395,7 +395,7 @@ public class HistoricProcessInstanceAuthorizationTest extends AuthorizationTest 
     createGrantAuthorization(PROCESS_DEFINITION, PROCESS_KEY, userId, Permissions.READ_HISTORY);
 
     // when
-    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
+    List<HistoricFinishedProcessInstanceReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
     // then
     assertEquals(0, reportResults.size());
@@ -406,7 +406,7 @@ public class HistoricProcessInstanceAuthorizationTest extends AuthorizationTest 
     prepareProcessInstances(PROCESS_KEY, -6, 5, 10);
 
     // when
-    List<FinishedReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
+    List<HistoricFinishedProcessInstanceReportResult> reportResults = historyService.createHistoricFinishedProcessInstanceReport().count();
 
     // then
     assertEquals(0, reportResults.size());

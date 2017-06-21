@@ -15,7 +15,7 @@ package org.camunda.bpm.engine.impl;
 
 import java.util.List;
 
-import org.camunda.bpm.engine.history.FinishedReportResult;
+import org.camunda.bpm.engine.history.HistoricFinishedProcessInstanceReportResult;
 import org.camunda.bpm.engine.history.HistoricFinishedProcessInstanceReport;
 import org.camunda.bpm.engine.impl.interceptor.Command;
 import org.camunda.bpm.engine.impl.interceptor.CommandContext;
@@ -30,10 +30,10 @@ public class HistoricFinishedProcessInstanceReportImpl implements HistoricFinish
   }
 
   @Override
-  public List<FinishedReportResult> count() {
-    return commandExecutor.execute(new Command<List<FinishedReportResult>>() {
+  public List<HistoricFinishedProcessInstanceReportResult> count() {
+    return commandExecutor.execute(new Command<List<HistoricFinishedProcessInstanceReportResult>>() {
       @Override
-      public List<FinishedReportResult> execute(CommandContext commandContext) {
+      public List<HistoricFinishedProcessInstanceReportResult> execute(CommandContext commandContext) {
         return commandContext.getHistoricProcessInstanceManager().findFinishedProcessInstancesReport();
       }
     });

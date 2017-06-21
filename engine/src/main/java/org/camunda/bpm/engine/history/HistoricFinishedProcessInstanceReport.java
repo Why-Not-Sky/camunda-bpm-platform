@@ -17,5 +17,5 @@ import java.util.List;
 
 public interface HistoricFinishedProcessInstanceReport {
 
-  List<FinishedReportResult> count();
+  List<HistoricFinishedProcessInstanceReportResult> count();
 }

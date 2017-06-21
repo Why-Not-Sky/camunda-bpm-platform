@@ -13,13 +13,15 @@
 
 package org.camunda.bpm.engine.history;
 
-public interface FinishedReportResult {
+public interface HistoricFinishedProcessInstanceReportResult {
 
   String getProcessDefinitionId();
 
   String getProcessDefinitionKey();
 
-  String getProcessDefinitionVersion();
+  String getProcessDefinitionName();
+
+  int getProcessDefinitionVersion();
 
   String getHistoryTimeToLive();
 
